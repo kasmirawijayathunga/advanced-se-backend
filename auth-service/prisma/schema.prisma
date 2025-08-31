@@ -1,0 +1,116 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DB_URL")
+}
+
+model User {
+  id            String          @id @default(uuid())
+  email         String          @unique @db.VarChar(255)
+  name          String          @db.Text
+  role          Int             @default(2)
+  password      String          @db.VarChar(75)
+  createdAt     DateTime        @default(now()) @db.Timestamp(0)
+  disabled      Boolean         @default(false)
+  token         String?         @default("") @db.Text
+  User_Role     User_Role       @relation(fields: [role], references: [id])
+  Shops         Shops[]
+  Shops_Updates Shops_Updates[]
+}
+
+model User_Role {
+  id    Int    @id @default(autoincrement())
+  label String @db.Text
+  User  User[]
+}
+
+model Customer {
+  id        String   @id @default(uuid())
+  name      String   @db.Text
+  createdAt DateTime @default(now()) @db.Timestamp(0)
+  disabled  Boolean  @default(false)
+  Shops     Shops[]
+}
+
+model Route {
+  id        String   @id @default(uuid())
+  label     String   @db.Text
+  createdAt DateTime @default(now()) @db.Timestamp(0)
+  disabled  Boolean  @default(false)
+  Shops     Shops[]
+}
+
+model Shops_Phone {
+  id              String   @id
+  phone1          String?  @default("") @db.VarChar(15)
+  phone1_whatsapp Boolean? @default(false)
+  phone1_call     Boolean? @default(false)
+  phone1_message  Boolean? @default(false)
+  phone2          String?  @default("") @db.VarChar(15)
+  phone2_whatsapp Boolean? @default(false)
+  phone2_call     Boolean? @default(false)
+  phone2_message  Boolean? @default(false)
+  phone3          String?  @default("") @db.VarChar(15)
+  phone3_whatsapp Boolean? @default(false)
+  phone3_call     Boolean? @default(false)
+  phone3_message  Boolean? @default(false)
+  Shops           Shops    @relation(fields: [id], references: [id])
+}
+
+model Shops_Images {
+  id    String  @id
+  img1  String? @default("") @db.VarChar(60)
+  img2  String? @default("") @db.VarChar(60)
+  img3  String? @default("") @db.VarChar(60)
+  img4  String? @default("") @db.VarChar(60)
+  img5  String? @default("") @db.VarChar(60)
+  Shops Shops   @relation(fields: [id], references: [id])
+}
+
+model Shops {
+  id           String        @id @default(uuid())
+  name         String        @db.Text
+  address      String        @db.Text
+  longitude    String        @db.Text
+  lattitude    String        @db.Text
+  createdAt    DateTime      @default(now()) @db.Timestamp(0)
+  disabled     Boolean       @default(false)
+  email        String        @unique @db.VarChar(255)
+  ownerId      String
+  routeId      String
+  shoptypesId  String
+  userId       String
+  Shops_Phone  Shops_Phone?
+  Shops_Images Shops_Images?
+  Customer     Customer      @relation(fields: [ownerId], references: [id])
+  Route        Route         @relation(fields: [routeId], references: [id])
+  Shoptypes    Shoptypes     @relation(fields: [shoptypesId], references: [id])
+  User         User          @relation(fields: [userId], references: [id])
+
+  Shops_Updates Shops_Updates[]
+
+  @@index([ownerId], map: "Shops_ownerId_fkey")
+  @@index([routeId], map: "Shops_routeId_fkey")
+  @@index([shoptypesId], map: "Shops_shoptypesId_fkey")
+  @@index([userId], map: "Shops_userId_fkey")
+}
+
+model Shops_Updates {
+  id        String   @id @default(uuid())
+  shopId    String
+  Shops     Shops    @relation(fields: [shopId], references: [id])
+  userId    String
+  User      User     @relation(fields: [userId], references: [id])
+  timestamp DateTime @default(now()) @db.Timestamp(0)
+}
+
+model Shoptypes {
+  id        String   @id @default(uuid())
+  label     String   @db.Text
+  createdAt DateTime @default(now()) @db.Timestamp(0)
+  disabled  Boolean  @default(false)
+  Shops     Shops[]
+}
