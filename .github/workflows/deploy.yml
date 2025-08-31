@@ -26,12 +26,12 @@ jobs:
 
       - name: Install dependencies
         working-directory: ${{ matrix.service }}
-        run: npx prisma generate
+        run: npm install
 
       - name: Prisma Generate
         working-directory: ${{ matrix.service }}
-        run: npm install
-
+        run: npx prisma generate
+        
       - name: Run tests
         working-directory: ${{ matrix.service }}
         run: |
