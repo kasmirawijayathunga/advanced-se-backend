@@ -4,6 +4,7 @@ const path = require('path');
 const services = [
   { name: 'auth-service', dir: 'auth-service' },
   { name: 'shop-service', dir: 'shop-service' },
+  { name: 'data-service', dir: 'data-service' },
   { name: 'server', dir: 'server' }
 ];
 

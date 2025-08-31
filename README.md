@@ -11,6 +11,7 @@ root
 ├── server           # Main API server / Gateway
 ├── auth-service     # Handles user authentication & authorization
 └── shop-service     # Handles shop-related operations
+└── data-service     # Handles data-related operations
 ```
 
 ## 📦 Installation

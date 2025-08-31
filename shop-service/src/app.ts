@@ -3,6 +3,8 @@ import helmet from 'helmet';
 import compression from 'compression';
 import routes from './routes';
 
+import shopController from './controller';
+
 import { errorConverter, errorHandler } from './middlewares/error';
 import DefaultResponse from './utils/DefaultResponse';
 
@@ -25,6 +27,7 @@ app.use(compression());
 // v1 static files
 app.use('/static', express.static('public'));
 
+app.get('/data', shopController.getData);
 // v1 api routes
 app.use('/', routes);
 

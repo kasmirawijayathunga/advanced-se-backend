@@ -1,9 +1,7 @@
 import express from 'express';
 import helmet from 'helmet';
 import compression from 'compression';
-import cors from 'cors';
-
-import proxy from "express-http-proxy";
+import routes from './routes';
 
 import { errorConverter, errorHandler } from './middlewares/error';
 import DefaultResponse from './utils/DefaultResponse';
@@ -24,18 +22,11 @@ app.use(express.urlencoded({ extended: true }));
 // gzip compression
 app.use(compression());
 
-// enable cors
-app.use(cors());
-app.options(/.*/, cors());
+// v1 static files
+app.use('/static', express.static('public'));
 
 // v1 api routes
-const auth = proxy("http://localhost:8001");
-const shops = proxy("http://localhost:8002");
-const data = proxy("http://localhost:8003");
-
-app.use("/v1/auth", auth);
-app.use("/v1/shops", shops);
-app.use("/v1/data", data);
+app.use('/', routes);
 
 // send back a 404 error for any unknown api request
 app.use((req, res, next) => {

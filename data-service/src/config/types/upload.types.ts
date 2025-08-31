@@ -1,0 +1,1 @@
+export type UploadFile = { [fieldname: string]: File[]; } | File[] | undefined | any
