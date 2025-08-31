@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        service: [auth-service, server, shop-service]
+        service: [auth-service, server, shop-service, data-service]
 
     steps:
       - name: Checkout repository
