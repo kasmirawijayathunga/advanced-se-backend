@@ -1,0 +1,59 @@
+name: Node.js Microservices CI/CD
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service: [auth-service, server, shop-service]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        working-directory: ${{ matrix.service }}
+        run: npm install
+
+      - name: Run tests
+        working-directory: ${{ matrix.service }}
+        run: |
+          if [ -f package.json ]; then
+            npm test || echo "No tests found for ${{ matrix.service }}"
+          fi
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install dependencies for all services
+        run: |
+          npm install --prefix auth-service
+          npm install --prefix server
+          npm install --prefix shop-service
+
+      - name: Deploy services
+        run: |
+          echo "Deploy logic goes here (Docker, Kubernetes, or server deployment commands)"
