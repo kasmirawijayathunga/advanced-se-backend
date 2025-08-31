@@ -26,6 +26,10 @@ jobs:
 
       - name: Install dependencies
         working-directory: ${{ matrix.service }}
+        run: npx prisma generate
+
+      - name: Prisma Generate
+        working-directory: ${{ matrix.service }}
         run: npm install
 
       - name: Run tests
@@ -56,4 +60,4 @@ jobs:
 
       - name: Deploy services
         run: |
-          echo "Deploy logic goes here (Docker, Kubernetes, or server deployment commands)"
+          echo "Need a server to deploy, so I will stop here"
